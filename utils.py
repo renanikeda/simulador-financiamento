@@ -1,4 +1,3 @@
-
 from classes import Parcela
 from typing import List
 import webbrowser
@@ -10,22 +9,46 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
     <html>
     <head>
         <style>
+            body {
+                margin: 40px;
+                font-family: Arial, sans-serif;
+            }
+            .table-container {
+                max-height: 400px;
+                overflow-y: auto;
+                margin-left: 5%;
+                margin-right: 5%;
+                margin-bottom: 40px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
             table {
                 border-collapse: collapse;
                 width: 100%;
-                margin-bottom: 30px;
             }
-            th, td {
+            th {
+                position: sticky;
+                top: 0;
+                background-color: #f2f2f2;
+                text-align: center;
+                padding: 12px 8px;
+                border-bottom: 2px solid #ddd;
+            }
+            td {
                 border: 1px solid #ddd;
                 padding: 8px;
                 text-align: right;
             }
-            th {
-                background-color: #f2f2f2;
-                text-align: center;
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            tr:hover {
+                background-color: #f5f5f5;
             }
             h2 {
                 color: #333;
+                margin-top: 30px;
+                margin-bottom: 15px;
             }
         </style>
     </head>
@@ -34,6 +57,7 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
     
     # Tabela SAC
     html += "<h2>Simulação SAC</h2>"
+    html += "<div class='table-container'>"
     html += """
     <table>
         <tr>
@@ -41,6 +65,7 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
             <th>Prestação</th>
             <th>Amortização</th>
             <th>Juros</th>
+            <th>Amortização Adicional</th>
             <th>Saldo Devedor</th>
         </tr>
     """
@@ -52,14 +77,16 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
             <td>R$ {p.prestacao:.2f}</td>
             <td>R$ {p.amortizacao:.2f}</td>
             <td>R$ {p.juros:.2f}</td>
+            <td>R$ {p.amortizacao_adicional:.2f}</td>
             <td>R$ {p.saldo_devedor:.2f}</td>
         </tr>
         """
     
-    html += "</table>"
+    html += "</table></div>"
     
     # Tabela Price
     html += "<h2>Simulação Price</h2>"
+    html += "<div class='table-container'>"
     html += """
     <table>
         <tr>
@@ -67,6 +94,7 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
             <th>Prestação</th>
             <th>Amortização</th>
             <th>Juros</th>
+            <th>Amortização Adicional</th>
             <th>Saldo Devedor</th>
         </tr>
     """
@@ -78,11 +106,12 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
             <td>R$ {p.prestacao:.2f}</td>
             <td>R$ {p.amortizacao:.2f}</td>
             <td>R$ {p.juros:.2f}</td>
+            <td>R$ {p.amortizacao_adicional:.2f}</td>
             <td>R$ {p.saldo_devedor:.2f}</td>
         </tr>
         """
     
-    html += "</table></body></html>"
+    html += "</table></div></body></html>"
     return html
 
 def show_table(html_txt: str):
