@@ -1,5 +1,6 @@
 from classes import Financiamento
 from utils import gerar_html_tabela, show_table
+import numpy as np
 
 def main():
     valor_imovel = 600_000
@@ -11,7 +12,7 @@ def main():
     
     print("\nSimulação SAC:")
     parcelas_sac = simulacao.calcular_sac()
-    for i in [0, 119, 239, 359]:  # Mostra primeira, última e algumas parcelas intermediárias
+    for i in np.linspace(0, len(parcelas_sac) - 1, 4, dtype=int):
         p = parcelas_sac[i]
         print(f"Parcela {p.numero}: Prestação = R$ {p.prestacao:.2f}, "
               f"Amortização = R$ {p.amortizacao:.2f}, Juros = R$ {p.juros:.2f}, "
@@ -19,7 +20,7 @@ def main():
     
     print("\nSimulação Price:")
     parcelas_price = simulacao.calcular_price()
-    for i in [0, 119, 239, 359]:
+    for i in np.linspace(0, len(parcelas_price) - 1, 4, dtype=int):
         p = parcelas_price[i]
         print(f"Parcela {p.numero}: Prestação = R$ {p.prestacao:.2f}, "
               f"Amortização = R$ {p.amortizacao:.2f}, Juros = R$ {p.juros:.2f}, "
