@@ -3,6 +3,9 @@ from typing import List
 import webbrowser
 import os
 
+def formatar_valor(valor: float) -> str:
+    return f"R$ {valor:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+
 def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]) -> str:
     html = """
     <!DOCTYPE html>
@@ -74,11 +77,11 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
         html += f"""
         <tr>
             <td>{p.numero}</td>
-            <td>R$ {p.prestacao:.2f}</td>
-            <td>R$ {p.amortizacao:.2f}</td>
-            <td>R$ {p.juros:.2f}</td>
-            <td>R$ {p.amortizacao_adicional:.2f}</td>
-            <td>R$ {p.saldo_devedor:.2f}</td>
+            <td>{formatar_valor(p.prestacao)}</td>
+            <td>{formatar_valor(p.amortizacao)}</td>
+            <td>{formatar_valor(p.juros)}</td>
+            <td>{formatar_valor(p.amortizacao_adicional)}</td>
+            <td>{formatar_valor(p.saldo_devedor)}</td>
         </tr>
         """
     
@@ -103,11 +106,11 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
         html += f"""
         <tr>
             <td>{p.numero}</td>
-            <td>R$ {p.prestacao:.2f}</td>
-            <td>R$ {p.amortizacao:.2f}</td>
-            <td>R$ {p.juros:.2f}</td>
-            <td>R$ {p.amortizacao_adicional:.2f}</td>
-            <td>R$ {p.saldo_devedor:.2f}</td>
+            <td>{formatar_valor(p.prestacao)}</td>
+            <td>{formatar_valor(p.amortizacao)}</td>
+            <td>{formatar_valor(p.juros)}</td>
+            <td>{formatar_valor(p.amortizacao_adicional)}</td>
+            <td>{formatar_valor(p.saldo_devedor)}</td>
         </tr>
         """
     

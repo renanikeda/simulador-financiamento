@@ -9,7 +9,7 @@ class Parcela:
     juros: float
     prestacao: float
     saldo_devedor: float
-    prestacao_total: float  # Nova propriedade para total com amortização adicional
+    prestacao_total: float 
 
 class Financiamento:
     def __init__(self, valor_imovel: float, valor_entrada: float, amortizacao_adicional: float, taxa_juros_anual: float, prazo_anos: int):
@@ -32,7 +32,7 @@ class Financiamento:
             prestacao_total = prestacao + self.amortizacao_adicional
             saldo_devedor = saldo_devedor - amortizacao - self.amortizacao_adicional
             
-            if saldo_devedor < 0:  # Evita saldo devedor negativo
+            if saldo_devedor < 0:
                 self.amortizacao_adicional += saldo_devedor
                 saldo_devedor = 0
             
@@ -61,7 +61,7 @@ class Financiamento:
             prestacao_total = prestacao + self.amortizacao_adicional
             saldo_devedor = saldo_devedor - amortizacao - self.amortizacao_adicional
             
-            if saldo_devedor < 0:  # Evita saldo devedor negativo
+            if saldo_devedor < 0:
                 self.amortizacao_adicional += saldo_devedor
                 saldo_devedor = 0
             
