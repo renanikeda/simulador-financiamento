@@ -69,6 +69,10 @@ simulacao_financiamento/
   - Juros sobre o saldo devedor
   - Prestação total (amortização + juros)
 
+## TODO
+- Adicionar TR
+- Resolver tabela PRICE
+
 ## Licença
 
 MIT
