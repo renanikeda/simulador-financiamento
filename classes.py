@@ -30,7 +30,7 @@ class Financiamento:
         return round(saldo_devedor / novo_prazo, 2) if novo_prazo > 0 else saldo_devedor
 
 
-    def calcular_sac(self) -> List[Parcela]:
+    def calcular_sac_sem_amortizacao(self) -> List[Parcela]:
         parcelas = []
         amortizacao = round(self.valor_financiado / self.prazo_meses, 2)
         saldo_devedor = self.valor_financiado
@@ -61,8 +61,8 @@ class Financiamento:
 
         return parcelas
     
-    def calcular_sac_com_amortizacao_adicional(self) -> List[Parcela]:
-        parcelas_original = self.calcular_sac()
+    def calcular_sac(self) -> List[Parcela]:
+        parcelas_original = self.calcular_sac_sem_amortizacao()
         if self.amortizacao_adicional == 0: return parcelas_original
         
         parcelas = []

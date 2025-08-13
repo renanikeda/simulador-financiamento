@@ -11,7 +11,7 @@ def main():
     simulacao = Financiamento(valor_imovel, entrada, amortizacao_adicional, taxa_juros_anual, prazo_anos)
     
     print("\nSimulação SAC:")
-    parcelas_sac = simulacao.calcular_sac_com_amortizacao_adicional()
+    parcelas_sac = simulacao.calcular_sac()
     for i in np.linspace(0, len(parcelas_sac) - 1, 4, dtype=int):
         p = parcelas_sac[i]
         print(f"Parcela {p.numero}: Prestação = R$ {p.prestacao:.2f}, "
