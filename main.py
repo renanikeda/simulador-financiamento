@@ -4,14 +4,14 @@ import numpy as np
 
 def main():
     valor_imovel = 600_000
-    entrada = 200_000
+    entrada = 300_000
     taxa_juros_anual = 12  # % ao ano
     prazo_anos = 30
     amortizacao_adicional = 2000  # Valor adicional de amortização mensal
     simulacao = Financiamento(valor_imovel, entrada, amortizacao_adicional, taxa_juros_anual, prazo_anos)
     
     print("\nSimulação SAC:")
-    parcelas_sac = simulacao.calcular_sac()
+    parcelas_sac = simulacao.calcular_sac_com_amortizacao_adicional()
     for i in np.linspace(0, len(parcelas_sac) - 1, 4, dtype=int):
         p = parcelas_sac[i]
         print(f"Parcela {p.numero}: Prestação = R$ {p.prestacao:.2f}, "
