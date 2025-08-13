@@ -8,7 +8,8 @@ def main():
     taxa_juros_anual = 12  # % ao ano
     prazo_anos = 30
     amortizacao_adicional = 2000  # Valor adicional de amortização mensal
-    simulacao = Financiamento(valor_imovel, entrada, amortizacao_adicional, taxa_juros_anual, prazo_anos)
+    parcela_total = 7000
+    simulacao = Financiamento(valor_imovel, entrada, taxa_juros_anual, prazo_anos, amortizacao_adicional, parcela_total)
     
     print("\nSimulação SAC:")
     parcelas_sac = simulacao.calcular_sac()

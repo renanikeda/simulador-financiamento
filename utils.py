@@ -65,10 +65,11 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
     <table>
         <tr>
             <th>Parcela</th>
-            <th>Prestação</th>
             <th>Amortização</th>
             <th>Juros</th>
+            <th>Prestação</th>
             <th>Amortização Adicional</th>
+            <th>Prestação Total </th>
             <th>Saldo Devedor</th>
         </tr>
     """
@@ -77,10 +78,11 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
         html += f"""
         <tr>
             <td>{p.numero}</td>
-            <td>{formatar_valor(p.prestacao)}</td>
             <td>{formatar_valor(p.amortizacao)}</td>
             <td>{formatar_valor(p.juros)}</td>
+            <td>{formatar_valor(p.prestacao)}</td>
             <td>{formatar_valor(p.amortizacao_adicional)}</td>
+            <td>{formatar_valor(p.prestacao_total)}</td>
             <td>{formatar_valor(p.saldo_devedor)}</td>
         </tr>
         """
@@ -94,10 +96,11 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
     <table>
         <tr>
             <th>Parcela</th>
-            <th>Prestação</th>
             <th>Amortização</th>
             <th>Juros</th>
+            <th>Prestação</th>
             <th>Amortização Adicional</th>
+            <th>Prestação Total </th>
             <th>Saldo Devedor</th>
         </tr>
     """
@@ -106,10 +109,11 @@ def gerar_html_tabela(parcelas_sac: List[Parcela], parcelas_price: List[Parcela]
         html += f"""
         <tr>
             <td>{p.numero}</td>
-            <td>{formatar_valor(p.prestacao)}</td>
             <td>{formatar_valor(p.amortizacao)}</td>
             <td>{formatar_valor(p.juros)}</td>
+            <td>{formatar_valor(p.prestacao)}</td>
             <td>{formatar_valor(p.amortizacao_adicional)}</td>
+            <td>{formatar_valor(p.prestacao_total)}</td>
             <td>{formatar_valor(p.saldo_devedor)}</td>
         </tr>
         """

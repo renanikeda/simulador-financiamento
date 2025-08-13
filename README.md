@@ -37,8 +37,10 @@ valor_imovel = 600_000
 entrada = 200_000
 taxa_juros_anual = 12  # % ao ano
 prazo_anos = 30
+amortizacao_adicional = 2000  # Valor adicional de amortização mensal
+parcela_total = 7000 # Valor total de prestação + amortização adicional, é priorizado frente amortizacao_adicional
 
-simulacao = Financiamento(valor_imovel, entrada, taxa_juros_anual, prazo_anos)
+simulacao = Financiamento(valor_imovel, entrada, taxa_juros_anual, prazo_anos, amortizacao_adicional, parcela_total)
 parcelas_sac = simulacao.calcular_sac()
 parcelas_price = simulacao.calcular_price()
 ```
