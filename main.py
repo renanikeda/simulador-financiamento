@@ -4,8 +4,8 @@ import numpy as np
 
 def main():
     valor_imovel = 600_000
-    entrada = 300_000
-    taxa_juros_anual = 12  # % ao ano
+    entrada = 200_000
+    taxa_juros_anual = 12.61 # % ao ano
     prazo_anos = 30
     amortizacao_adicional = 2000  # Valor adicional de amortização mensal
     parcela_total = 7000

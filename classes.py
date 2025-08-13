@@ -64,7 +64,10 @@ class Financiamento:
     
     def calcular_sac(self) -> List[Parcela]:
         parcelas_original = self.calcular_sac_sem_amortizacao()
-        if self.amortizacao_adicional == 0 and self.parcela_total < parcelas_original[0].prestacao: return parcelas_original
+        if self.parcela_total < parcelas_original[0].prestacao:
+            raise Exception("Parcela total não pode ser menor que a primeira prestação do SAC.")
+        if self.amortizacao_adicional == 0:     
+            return parcelas_original
         
         parcelas = []
         amortizacao = round(self.valor_financiado / self.prazo_meses, 2)
