@@ -32,41 +32,13 @@ class Financiamento:
     def calculo_novo_prazo(self, saldo_devedor: float, prestacao_ideal: float) -> int:
         return math.floor(saldo_devedor/(prestacao_ideal - saldo_devedor * self.taxa_juros_mensal))
      
-    def calculo_nova_amortizacao(self, saldo_devedor: float, prestacao_ideal: float) -> float:
-        novo_prazo = self.calculo_novo_prazo(saldo_devedor, prestacao_ideal)
-        return round(saldo_devedor / novo_prazo, 2) if novo_prazo > 0 else saldo_devedor
+    def calculo_nova_amortizacao(self, saldo_devedor_corrigido: float, prazo_atual: int) -> float:
+        amortizacao_ideal = self.valor_financiado / self.prazo_meses
+        saldo_devedor_ideal = self.valor_financiado - amortizacao_ideal * prazo_atual
+        prestacao_ideal = amortizacao_ideal + saldo_devedor_ideal * self.taxa_juros_mensal
+        novo_prazo = self.calculo_novo_prazo(saldo_devedor_corrigido, prestacao_ideal)
+        return round(saldo_devedor_corrigido / novo_prazo, 2) if novo_prazo > 0 else saldo_devedor_corrigido
 
-
-    def calcular_sac_sem_amortizacao(self) -> List[Parcela]:
-        parcelas = []
-        amortizacao = round(self.valor_financiado / self.prazo_meses, 2)
-        saldo_devedor = self.valor_financiado
-        
-        for i in range(1, self.prazo_meses + 1):
-            saldo_devedor_corrigido = round(saldo_devedor * (1 + self.taxa_tr_mensal), 2)
-            amortizacao = round(amortizacao * (1 + self.taxa_tr_mensal), 2)
-            juros = round(saldo_devedor_corrigido * self.taxa_juros_mensal, 2)
-            prestacao = amortizacao + juros
-            prestacao_total = prestacao 
-            saldo_devedor = saldo_devedor_corrigido - amortizacao
-            
-            if saldo_devedor < 0:
-                saldo_devedor = 0
-
-            parcela = Parcela(
-                numero=i,
-                saldo_devedor_corrigido=saldo_devedor_corrigido,
-                amortizacao=amortizacao,
-                amortizacao_adicional=self.amortizacao_adicional,
-                juros=juros,
-                prestacao=prestacao,
-                saldo_devedor_atualizado=saldo_devedor,
-                prestacao_total=prestacao_total
-            )
-            parcelas.append(parcela)
-
-        return parcelas
-    
     def calcular_sac(self) -> List[Parcela]:
         parcelas_original = self.calcular_sac_sem_amortizacao()
         if self.parcela_total > 0 and self.parcela_total < parcelas_original[0].prestacao:
@@ -82,7 +54,7 @@ class Financiamento:
         for i in range(1, self.prazo_meses + 1):
             saldo_devedor_corrigido = round(saldo_devedor * (1 + self.taxa_tr_mensal), 2)
             if self.aplicar_amortizacao() and i > 1:
-                amortizacao = self.calculo_nova_amortizacao(saldo_devedor_corrigido, parcelas_original[i].prestacao)
+                amortizacao = self.calculo_nova_amortizacao(saldo_devedor_corrigido, i)
 
 
             juros = round(saldo_devedor_corrigido * self.taxa_juros_mensal, 2)
