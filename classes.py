@@ -26,6 +26,9 @@ class Financiamento:
         self.amortizacao_adicional = amortizacao_adicional
         self.parcela_total = parcela_total
 
+    def aplicar_amortizacao(self):
+         return (self.parcela_total > 0 or self.amortizacao_adicional > 0)
+
     def calculo_novo_prazo(self, saldo_devedor: float, prestacao_ideal: float) -> int:
         return math.floor(saldo_devedor/(prestacao_ideal - saldo_devedor * self.taxa_juros_mensal))
      
@@ -61,9 +64,6 @@ class Financiamento:
                 prestacao_total=prestacao_total
             )
             parcelas.append(parcela)
-            
-            if saldo_devedor == 0: 
-                break
 
         return parcelas
     
@@ -71,7 +71,7 @@ class Financiamento:
         parcelas_original = self.calcular_sac_sem_amortizacao()
         if self.parcela_total > 0 and self.parcela_total < parcelas_original[0].prestacao:
             raise Exception("Parcela total não pode ser menor que a primeira prestação do SAC.")
-        if self.amortizacao_adicional == 0:
+        if not self.aplicar_amortizacao():
             print("Amortização adicional não foi definida, utilizando amortização padrão.")
             return parcelas_original
         
@@ -81,7 +81,7 @@ class Financiamento:
         
         for i in range(1, self.prazo_meses + 1):
             saldo_devedor_corrigido = round(saldo_devedor * (1 + self.taxa_tr_mensal), 2)
-            if self.amortizacao_adicional > 0 and i > 1:
+            if self.aplicar_amortizacao() and i > 1:
                 amortizacao = self.calculo_nova_amortizacao(saldo_devedor_corrigido, parcelas_original[i].prestacao)
 
 
