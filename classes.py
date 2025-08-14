@@ -1,17 +1,8 @@
-from dataclasses import dataclass
 from typing import List
 import math
 
-@dataclass
-class Parcela:
-    numero: int
-    saldo_devedor_corrigido: float
-    amortizacao: float
-    amortizacao_adicional: float
-    juros: float
-    prestacao: float
-    saldo_devedor_atualizado: float
-    prestacao_total: float 
+from utils import Parcela, formatar_valor
+
 
 class Financiamento:
     def __init__(self, valor_imovel: float, valor_entrada: float, taxa_juros_anual: float, taxa_tr: float = 0,prazo_anos: int = 30, amortizacao_adicional: float = 0, parcela_total: float = 0):
@@ -40,12 +31,9 @@ class Financiamento:
         return round(saldo_devedor_corrigido / novo_prazo, 2) if novo_prazo > 0 else saldo_devedor_corrigido
 
     def calcular_sac(self) -> List[Parcela]:
-        parcelas_original = self.calcular_sac_sem_amortizacao()
-        if self.parcela_total > 0 and self.parcela_total < parcelas_original[0].prestacao:
-            raise Exception("Parcela total não pode ser menor que a primeira prestação do SAC.")
-        if not self.aplicar_amortizacao():
-            print("Amortização adicional não foi definida, utilizando amortização padrão.")
-            return parcelas_original
+        primeira_parcela_ideal = self.valor_imovel * self.taxa_juros_mensal + self.valor_financiado / self.prazo_meses
+        if self.parcela_total > 0 and self.parcela_total < primeira_parcela_ideal:
+            raise Exception(f"Parcela total não pode ser menor que a primeira prestação do SAC {formatar_valor(primeira_parcela_ideal)}.")
         
         parcelas = []
         amortizacao = round(self.valor_financiado / self.prazo_meses, 2)

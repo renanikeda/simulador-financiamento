@@ -1,7 +1,19 @@
-from classes import Parcela
+from dataclasses import dataclass
 from typing import List
 import webbrowser
 import os
+
+
+@dataclass
+class Parcela:
+    numero: int
+    saldo_devedor_corrigido: float
+    amortizacao: float
+    amortizacao_adicional: float
+    juros: float
+    prestacao: float
+    saldo_devedor_atualizado: float
+    prestacao_total: float 
 
 def formatar_valor(valor: float) -> str:
     return f"R$ {valor:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
