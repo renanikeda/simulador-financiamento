@@ -5,20 +5,23 @@ import math
 @dataclass
 class Parcela:
     numero: int
+    saldo_devedor_corrigido: float
     amortizacao: float
     amortizacao_adicional: float
     juros: float
     prestacao: float
-    saldo_devedor: float
+    saldo_devedor_atualizado: float
     prestacao_total: float 
 
 class Financiamento:
-    def __init__(self, valor_imovel: float, valor_entrada: float, taxa_juros_anual: float, prazo_anos: int, amortizacao_adicional: float = 0, parcela_total: float = 0):
+    def __init__(self, valor_imovel: float, valor_entrada: float, taxa_juros_anual: float, taxa_tr: float = 0,prazo_anos: int = 30, amortizacao_adicional: float = 0, parcela_total: float = 0):
         self.valor_imovel = valor_imovel
         self.valor_entrada = valor_entrada
         self.valor_financiado = valor_imovel - valor_entrada
-        self.taxa_juros_anual = taxa_juros_anual / 100 if taxa_juros_anual > 1 else taxa_juros_anual
-        self.taxa_juros_mensal = (1 + self.taxa_juros_anual) ** (1/12) - 1
+        self.taxa_juros_anual = taxa_juros_anual / 100
+        self.taxa_juros_mensal = round((1 + self.taxa_juros_anual) ** (1/12) - 1, 4)
+        self.taxa_tr = taxa_tr / 100
+        self.taxa_tr_mensal = round((1 + self.taxa_tr) ** (1/12) - 1, 4)
         self.prazo_meses = prazo_anos * 12
         self.amortizacao_adicional = amortizacao_adicional
         self.parcela_total = parcela_total
@@ -37,22 +40,24 @@ class Financiamento:
         saldo_devedor = self.valor_financiado
         
         for i in range(1, self.prazo_meses + 1):
-            juros = round(saldo_devedor * self.taxa_juros_mensal, 2)
+            saldo_devedor_corrigido = round(saldo_devedor * (1 + self.taxa_tr_mensal), 2)
+            amortizacao = round(amortizacao * (1 + self.taxa_tr_mensal), 2)
+            juros = round(saldo_devedor_corrigido * self.taxa_juros_mensal, 2)
             prestacao = amortizacao + juros
             prestacao_total = prestacao 
-            saldo_devedor = saldo_devedor - amortizacao
+            saldo_devedor = saldo_devedor_corrigido - amortizacao
             
             if saldo_devedor < 0:
-                self.amortizacao_adicional += saldo_devedor
                 saldo_devedor = 0
 
             parcela = Parcela(
                 numero=i,
+                saldo_devedor_corrigido=saldo_devedor_corrigido,
                 amortizacao=amortizacao,
                 amortizacao_adicional=self.amortizacao_adicional,
                 juros=juros,
                 prestacao=prestacao,
-                saldo_devedor=saldo_devedor,
+                saldo_devedor_atualizado=saldo_devedor,
                 prestacao_total=prestacao_total
             )
             parcelas.append(parcela)
@@ -64,9 +69,10 @@ class Financiamento:
     
     def calcular_sac(self) -> List[Parcela]:
         parcelas_original = self.calcular_sac_sem_amortizacao()
-        if self.parcela_total < parcelas_original[0].prestacao:
+        if self.parcela_total > 0 and self.parcela_total < parcelas_original[0].prestacao:
             raise Exception("Parcela total não pode ser menor que a primeira prestação do SAC.")
-        if self.amortizacao_adicional == 0:     
+        if self.amortizacao_adicional == 0:
+            print("Amortização adicional não foi definida, utilizando amortização padrão.")
             return parcelas_original
         
         parcelas = []
@@ -74,17 +80,17 @@ class Financiamento:
         saldo_devedor = self.valor_financiado
         
         for i in range(1, self.prazo_meses + 1):
-
+            saldo_devedor_corrigido = round(saldo_devedor * (1 + self.taxa_tr_mensal), 2)
             if self.amortizacao_adicional > 0 and i > 1:
-                amortizacao = self.calculo_nova_amortizacao(saldo_devedor, parcelas_original[i].prestacao)
+                amortizacao = self.calculo_nova_amortizacao(saldo_devedor_corrigido, parcelas_original[i].prestacao)
 
 
-            juros = round(saldo_devedor * self.taxa_juros_mensal, 2)
+            juros = round(saldo_devedor_corrigido * self.taxa_juros_mensal, 2)
             prestacao = amortizacao + juros
             prestacao_total = self.parcela_total if self.parcela_total > 0 else prestacao + self.amortizacao_adicional
 
             amortizacao_adicional = self.amortizacao_adicional if self.parcela_total == 0 else self.parcela_total - prestacao
-            saldo_devedor = saldo_devedor - amortizacao - amortizacao_adicional
+            saldo_devedor = saldo_devedor_corrigido - amortizacao - amortizacao_adicional
 
             if saldo_devedor < 0:
                 amortizacao_adicional += saldo_devedor
@@ -92,11 +98,12 @@ class Financiamento:
             
             parcela = Parcela(
                 numero=i,
+                saldo_devedor_corrigido=saldo_devedor_corrigido,
                 amortizacao=amortizacao,
                 amortizacao_adicional=amortizacao_adicional,
                 juros=juros,
                 prestacao=prestacao,
-                saldo_devedor=saldo_devedor,
+                saldo_devedor_atualizado=saldo_devedor,
                 prestacao_total=prestacao_total
             )
             parcelas.append(parcela)
@@ -123,11 +130,12 @@ class Financiamento:
             
             parcela = Parcela(
                 numero=i,
+                saldo_devedor_corrigido=saldo_devedor,
                 amortizacao=amortizacao,
                 amortizacao_adicional=self.amortizacao_adicional,
                 juros=juros,
                 prestacao=prestacao,
-                saldo_devedor=saldo_devedor,
+                saldo_devedor_atualizado=saldo_devedor,
                 prestacao_total=prestacao_total
             )
             parcelas.append(parcela)
